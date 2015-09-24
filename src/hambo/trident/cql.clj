@@ -8,8 +8,7 @@
             TransactionalMap
             OpaqueMap
             CachedMap
-            SnapshottableMap]
-           [calculon.storm.trident.state LRUCachedMap]))
+            SnapshottableMap]))
 
 (defn mk-map-state [state-type backing-map]
   (case state-type
@@ -36,5 +35,5 @@
         conn (cc/connect (s/split (get hambo-config conf/HAMBO-HOSTS) #",") {:keyspace keyspace})
         instrumented-map (backing-hof conn table)
         _ (.registerMetrics instrumented-map conf metrics prefix-name (int bucket-size))
-        cached-map (LRUCachedMap. instrumented-map cache-size)]
+        cached-map (CachedMap. instrumented-map cache-size)]
     (mk-map-state state-type cached-map)))
